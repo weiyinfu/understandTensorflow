@@ -26,7 +26,7 @@ def softmax(x: level1.Tensor):
 
 def sigmoid(x):
     up = level1.Tensor(np.broadcast_to(level0.get_const(1.0), x.shape))  # 分子
-    return up / (up + x)
+    return up / (up + level1.exp(x * (-1)))
 
 
 def reduce_mean(x):

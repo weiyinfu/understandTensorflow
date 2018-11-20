@@ -4,6 +4,10 @@ from sklearn.model_selection import train_test_split
 
 import level9 as tf
 
+"""
+线性回归的效果比多层神经网络效果好
+"""
+
 
 def rand(shape):
     return np.random.random(shape) * 0.01 - 0.005
@@ -17,16 +21,11 @@ def activate(x):
 data = load_iris()
 train_y, test_y, train_x, test_x = train_test_split(data.target, data.data)
 print(train_x.shape, train_y.shape)
-layer1_hidden_size = 8  # 模型大小要和数据量匹配，否则很容易过拟合
 place_x = tf.placeholder((1, 4))
 place_y = tf.placeholder(tuple())
-w = tf.variable(rand((4, layer1_hidden_size)))
-b = tf.variable(rand((1, layer1_hidden_size,)))
-wx_b = tf.matmul(place_x, w) + b
-layer1 = activate(wx_b)  # 使用1/(1+x)效果更好，使用sigmoid反倒不好
-w = tf.variable(rand((layer1_hidden_size, 3)))
+w = tf.variable(rand((4, 3)))
 b = tf.variable(rand((1, 3)))
-wx_b = tf.matmul(layer1, w) + b
+wx_b = tf.matmul(place_x, w) + b
 wx_b_flat = tf.reshape(wx_b, (-1,))
 logits = tf.softmax(wx_b_flat)
 argmax = tf.Tensor(np.array(tf.argmax(logits)))
