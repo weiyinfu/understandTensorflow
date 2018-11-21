@@ -2,8 +2,7 @@ import threading
 
 import numpy as np
 
-import level0
-import level1
+import operations as op
 
 """
 图模型已经呼之欲出了
@@ -27,9 +26,9 @@ def to_op_list(somthing):
         a = None
         if type(x) == list:
             a = list2list(x)
-        elif isinstance(x, level1.Tensor):
+        elif isinstance(x, op.Tensor):
             a = tensor2list(x)
-        elif isinstance(x, level0.Op):
+        elif isinstance(x, op.Op):
             a = [x]
         else:
             assert 'unkown type %s' % (type(x))
@@ -50,7 +49,7 @@ def control_dependency(first_run, second_run):
 def group(nodes):
     # 把结点打包，主要用于依赖控制
     nodes = to_op_list(nodes)
-    return level0.Group(nodes)
+    return op.Group(nodes)
 
 
 class Node:
@@ -122,6 +121,7 @@ class Graph:
 
     def simplifiy(self):
         # 有向无环图是绝对可以化简的，化简之后的DAG能够极大减少运算量
+        # 逐层化简有向无环图，在每层按照op的类型、操作数类型进行归类，如果相同，则合并结点
         pass
 
     def find_need_nodes(self, op2node, fetches):
@@ -166,9 +166,9 @@ class Graph:
     def get_graph(self, endnodes):
         q = []
         for nodes in endnodes:
-            if isinstance(nodes, level1.Tensor):
+            if isinstance(nodes, op.Tensor):
                 q.extend(nodes.a.reshape(-1))
-            elif isinstance(nodes, level0.Op):
+            elif isinstance(nodes, op.Op):
                 q.append(nodes)
             else:
                 assert False, 'unkown type %s' % (type(nodes))
@@ -196,7 +196,7 @@ class Graph:
 
 
 if __name__ == '__main__':
-    a = level0.get_const(1.0)
+    a = op.const(1.0)
     b = a + a
     control_dependency(a, b)
     g = Graph([b])

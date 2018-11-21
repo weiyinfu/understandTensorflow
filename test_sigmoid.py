@@ -1,5 +1,5 @@
 import pylab as plt
-import level9 as tf
+import tf
 import numpy as np
 
 x = tf.variable(np.linspace(-15, 15, 100))

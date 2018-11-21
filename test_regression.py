@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-import level9 as tf
+import tf
 
 """
 线性回归的效果比多层神经网络效果好
